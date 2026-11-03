@@ -608,6 +608,9 @@ class ConfirmOTPAndSetPassword(viewsets.ModelViewSet):
         apply_new_password(user, new_password)
         return Response({"status": True, "message": "Password reset successfully", "data": []})
 
+# Backward-compatibility alias for older urls.py referencing ConfirmAndSetPassword
+ConfirmAndSetPassword = ConfirmOTPAndSetPassword
+
 class RequestOTPViewSet(viewsets.ModelViewSet):
     authentication_classes = []  # public endpoint: ignore any stale token
     permission_classes = [AllowAny]
