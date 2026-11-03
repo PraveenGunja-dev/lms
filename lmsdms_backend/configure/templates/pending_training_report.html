@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Completed & Pending Training Report</title>
+</head>
+<body>
+    <div style="width: 100%;margin:auto;margin-top:20px; max-width: 900px; border: 1px solid black; padding: 10px; font-family: Arial, sans-serif;">
+        <div style="margin-bottom: 5px;">
+            <span style="font-weight: bold;">Training Type:</span> {{ training_type }}<br>
+            <span style="font-weight: bold;">Document No:</span> {{ training_no }}<br>
+            <span style="font-weight: bold;">Document Version:</span> {{ training_version }}<br>
+            <span style="font-weight: bold;">Document Title:</span> {{ training_title }}
+        </div>
+        
+        <div style="text-align: center; margin: 15px 0; font-weight: bold; text-decoration: underline;">
+            Completed & Pending Training Report
+        </div>
+        
+        <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+            <tr>
+                <th style="border: 1px solid black; padding: 5px; text-align: center; font-weight: bold;">Sr.<br>No.:</th>
+                <th style="border: 1px solid black; padding: 5px; text-align: center; font-weight: bold;">Emp No.:</th>
+                <th style="border: 1px solid black; padding: 5px; text-align: center; font-weight: bold;">Employee Name:</th>
+                <th style="border: 1px solid black; padding: 5px; text-align: center; font-weight: bold;">Department:</th>
+                <th style="border: 1px solid black; padding: 5px; text-align: center; font-weight: bold;">Status</th>
+            </tr>
+            {% for user in users_data %}
+            <tr>
+                <td style="border: 1px solid black; padding: 5px; text-align: center;">{{ forloop.counter }}</td>
+                <td style="border: 1px solid black; padding: 5px; text-align: center;">{{ user.emp_no }}</td>
+                <td style="border: 1px solid black; padding: 5px;">{{ user.employee_name }}</td>
+                <td style="border: 1px solid black; padding: 5px;">{{ user.department_name }}</td>
+                <td style="border: 1px solid black; padding: 5px; text-align: center;">{{ user.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <div style="text-align: center; margin-top: 20px; font-weight: bold;">
+            Printed By: {{ log_user }}
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            Date: {{ current_datetime }}
+        </div>
+    </div>
+</body>
+</html>

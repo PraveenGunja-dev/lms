@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Attendance Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 0 auto;
+
+        }
+        table, th, td {
+            border: 1px solid black;
+            text-align: left;
+        }
+        th, td {
+            padding: 8px;
+        }
+        .header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .note {
+            font-size: 12px;
+        }
+        .printed-info {
+            font-size: 12px;
+            text-align: left;
+            margin-top: 10px;
+        }
+        .printed-info span {
+            float: right;
+        }
+
+        .serialClass{
+            max-width: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">TRAINING ATTENDANCE SHEET</div>
+
+    <table>
+        <tr>
+            <td><strong>Training Title</strong></td>
+            <td>{{ users_data.training_title }}</td>
+        </tr>
+        <tr>
+            <td><strong>Version</strong></td>
+            <td>{{ users_data.version }}</td>
+        </tr>
+        <tr>
+            <td><strong>Training No.</strong></td>
+            <td>{{ users_data.training_number }}</td>
+        </tr>
+        <tr>
+            <td><strong>Date</strong></td>
+            <td>{{ users_data.start_time|date:"d-m-Y" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Name of the Faculty</strong></td>
+            <td>{{ users_data.trainer }}</td>
+        </tr>
+    </table>
+
+    <br><br>
+    <br>
+    <table>
+        <tr>
+            <th class="serialClass">Sr. No.</th>
+            <th>Name</th>
+            <th>Department</th>
+            {% for user in users_data.users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.department }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+
+</body>
+</html>

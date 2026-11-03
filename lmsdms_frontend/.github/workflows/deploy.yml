@@ -1,0 +1,42 @@
+name: Deploy LMSDMS Frontend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          script_timeout: 10m
+          script: |
+            # Backup existing frontend
+            rm -rf /var/www/html/lmsdms_frontend-Backup
+            mkdir -p /var/www/html/lmsdms_frontend-Backup
+            sudo rsync -avh /var/www/html/lmsdms_frontend/* /var/www/html/lmsdms_frontend-Backup/.
+
+            # Update frontend code
+            cd /var/www/html/lmsdms_frontend
+            git stash
+            git pull
+            npm install
+            npm run build
+
+            # Copy build to web root
+            sudo rsync -avh /var/www/html/lmsdms_frontend/build/* /var/www/html/.
+
+            # Restart backend processes
+            pm2 stop all
+            pm2 start all
+            sudo service nginx restart

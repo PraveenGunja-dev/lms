@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate for Induction Training</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 210mm;
+            height: 297mm;
+            margin: 0 auto;
+            padding: 15mm;
+            box-sizing: border-box;
+            border: 1px solid #000;
+        }
+        .certificate-header {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            text-decoration: underline;
+        }
+        .certificate-body {
+            text-align: center;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        .certificate-body span {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 30px;
+        }
+        .footer .signature {
+            text-align: right;
+        }
+        .logo-box {
+            width: 100px;
+            height: 80px;
+            border: 1px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        .logo {
+            max-width: 80%;
+            max-height: 80%;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+            table-layout: fixed; /* Ensures the table doesn't grow beyond available space */
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            font-size: 12px;
+            border: 1px solid black;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+        td {
+            white-space: normal; /* Allows long content to wrap */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Logo Section -->
+        <div class="logo-box">
+            <img src="D:/Internship/Projects/lmsdms_backend/configure/templates/logo.jpeg" alt="Company Logo" class="logo" width="1000" height="1000">
+        </div>
+
+        <!-- Document Details Table -->
+        <table>
+            <tr>
+                <td style="font-weight: bold; width: 50%; font-size: 12px;">Document Number:</td>
+                <td style="width: 50%; font-size: 12px;">1234566</td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold; width: 50%; font-size: 12px;">Version:</td>
+                <td style="width: 50%; font-size: 12px;">1.0</td>
+            </tr>
+        </table>
+
+        <!-- Certificate Header -->
+        <div class="certificate-header">
+            CERTIFICATE FOR INDUCTION TRAINING
+        </div>
+        
+        <!-- Certificate Body -->
+        <div class="certificate-body">
+            This is to certify that Mr./Ms. <span>{{ users_data.username }}</span>, has joined Bharat Parentals<br>
+            on <span>{{ users_data.completion_date }}</span> and has successfully completed his/her Induction Training Programme.
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="signature">
+                <p>HR Manager</p> <!-- Dynamic HR Name -->
+                <p>{{ users_data.date }}</p> <!-- Dynamic Date -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

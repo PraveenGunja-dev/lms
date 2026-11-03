@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+    
+        .a4-container {
+            width: 794px;
+            height: auto; /* Adjust to auto to accommodate larger content */
+            background: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+    
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+            page-break-inside: avoid; /* Prevent page breaks inside the table */
+        }
+    
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid black;
+            word-wrap: break-word; /* Allow text to wrap within cells */
+            max-width: 150px; /* Restrict the table cell width */
+        }
+    
+        img {
+            display: block;
+            margin-bottom: 20px;
+            max-width: 100%;
+        }
+    
+        .spacer {
+            margin: 30px 0;
+        }
+    
+        /* Page break for large tables or sections */
+        .page-break {
+            page-break-before: always;
+        }
+    
+        /* Force the table to adjust and break into new pages if it's too long */
+        table#myTable {
+            page-break-after: auto; /* Automatically break the table when necessary */
+        }
+    
+        table#myTable tr {
+            page-break-inside: avoid; /* Prevent row splitting across pages */
+        }
+    
+        /* Force a new page for each large table or section */
+        table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    
+    <title>Template</title>
+</head>
+<body>
+    <div class="a4-container">
+        <table>
+            <colgroup>
+                <col>
+                <col>
+                <col>
+                <col>
+            </colgroup>
+            <tr>
+                <td colspan="4" style="text-align: left;">
+                    <img src={{logo}} alt="Company Logo" class="logo" width="300">
+                </td>
+            </tr>
+            <tr>
+                <td>Title</td>
+                <td colspan="3" contenteditable="true">{{document.document_title}}</td>
+            </tr>
+            <tr>
+                <td>Number</td>
+                <td colspan="3" contenteditable="true">{{document.document_number}}</td>
+            </tr>
+            <tr>
+                <td>Version</td>
+                <td contenteditable="true">{{document.version}}</td>
+                <!-- <td>Supersedes:</td>
+                <td contenteditable="true"></td> -->
+            </tr>
+            <tr>
+                <td>Department</td>
+                <td colspan="3" contenteditable="true">{{document.user.department.department_name}}</td>
+            </tr>
+        </table>
+
+        <div class="spacer"></div>
+
+        <table>
+            <colgroup>
+                <col style="width: 40%;">
+                <col style="width: 60%;">
+            </colgroup>
+            <tr>
+                <td style="text-align: left; vertical-align: top;"><strong>Effective Date</strong></td>
+                <td style="text-align: left;" contenteditable="true">
+                    {{ document.effective_date|default_if_none:""|date:"d-m-Y"|default:"--" }}
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: left; vertical-align: top;"><strong>Next Review Date</strong></td>
+                <td style="text-align: left;" contenteditable="true">
+                    {{ review_date|default_if_none:""|date:"d-m-Y"|default:"To be set when the document becomes effective" }}
+                </td>
+            </tr>
+        </table>
+        
+        <div class="spacer"></div>
+
+        <table id="myTable">
+            <tr>
+                <th>Role</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>User Name</th>
+                <th>Date</th>
+            </tr>
+            {% for action in all_actions %}
+            <tr>
+                <td>
+                    {{ action.role }}
+                </td>
+                <td>{{ action.user.department.department_name|default:"-" }}</td>
+                <td>{{ action.user.designation|default:"-" }}</td>
+                <td>{{ action.user.first_name }} {{ action.user.last_name }}</td>
+                <td>{{ action.created_at|date:"d-m-Y H:i:s" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

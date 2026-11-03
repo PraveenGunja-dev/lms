@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Training</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+            border: 2px solid black; /* Full box border */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            border-bottom: 2px solid black; /* Separating header from content */
+            padding-bottom: 15px;
+        }
+
+        .company-name, .logo-box, .address-box {
+            flex: 1;  /* Equal width for all */
+            text-align: center;
+            padding: 10px;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120px; /* Adjust height as needed */
+            weight: 20px; /* Adjust weight as needed */
+        }
+
+        .logo-box img {
+            width: 20%; 
+            height: 100%; 
+            object-fit: contain;
+        }
+
+        .address-box {
+            border: 1px solid black;
+            padding: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0 10px 0;
+            font-weight: bold;
+        }
+
+        .certificate-text {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 2;
+            margin: 10px 0;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .recipient-name {
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 1px 0;
+            text-align: center;
+        }
+
+        .training-details {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        .complete-text {
+            font-size: 22px;
+            font-family: 'Times New Roman', Times, serif;
+            margin-top: 10px;
+        }
+
+        .date-time {
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 18px;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: center;
+        }
+
+        .footer-note {
+            font-size: 14px;
+            margin-top: 50px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .print-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-top: 20px;
+            border-top: 2px solid black;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="company-name">N10 TECHNOSOFT</div>
+
+            <div class="logo-box">
+                <img src="{{ users_data.logo }}" alt="Company Logo">
+            </div>
+
+            <div class="address-box">
+                A-404, The First, B/S Keshavbaug Party Plot, Vastrapur,<br>
+                Ahmedabad -380015
+            </div>
+        </div>
+
+        <!-- Certificate Title -->
+        <div class="title">Certificate of Training</div>
+
+        <!-- Certificate Text -->
+        <div class="certificate-text">This is to certify that</div>
+
+        <p class="recipient-name">{{ users_data.username }}</p>
+
+        <div class="training-details">
+            <h4 class="complete-text">has successfully completed training listed in TNI of</h4>
+            {{ users_data.job_assign }}
+        </div>
+
+        <div class="date-time">
+            Date of Certificate Generation: {{ users_data.date_time }}
+        </div>
+
+        <!-- Footer Note -->
+        <div class="footer-note">
+            Note: This is an Electronically Generated Certificate, hence Signature is not required.
+        </div>
+
+        <!-- Print Details -->
+        <div class="print-details">
+            <div>Printed By: {{ users_data.username }}</div>
+            <div>Printed Date: {{ users_data.date_time }}</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+name: LMSDMS-Frontend
+on: 
+  push:
+    branches:
+    - main
+jobs:
+
+  build-pre:
+    name: Update LMSDMS-Frontend
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.LMSDMS_HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.LMMSDMS_KEY }}
+        port: ${{ secrets.PORT }}
+        script_stop: true
+        script: |
+          rm -Rf /var/www/html/lmsdms_frontend-Backup
+          mkdir /var/www/html/lmsdms_frontend-Backup
+          sudo rsync -avh /var/www/html/lmsdms_frontend/* /var/www/html/lmsdms_frontend-Backup/.
+          cd /var/www/html/lmsdms_frontend
+          git stash
+          git pull
+          npm i
+          npm run build
+          sudo rsync -avh /var/www/html/lmsdms_frontend/build/* /var/www/html/.
+          pm2 stop all
+          pm2 start all
+          service nginx restart

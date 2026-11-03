@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Training Record Log</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        th:nth-child(1), td:nth-child(1) { width: 100px; }
+        th:nth-child(2), td:nth-child(2) { width: 80px; }
+        th:nth-child(3), td:nth-child(3) { width: 120px; }
+        th:nth-child(4), td:nth-child(4) { width: 80px; }
+        th:nth-child(5), td:nth-child(5) { width: 80px; }
+        th:nth-child(6), td:nth-child(6) { width: 0px; }
+        th:nth-child(7), td:nth-child(7) { width: 0px; }
+        th:nth-child(8), td:nth-child(8) { width: 0px; }
+        th:nth-child(9), td:nth-child(9) { width: 0px; }
+    </style>
+</head>
+<body>
+    <h1>Employee Training Record Log</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee Name</th>
+                <th>Designation</th>
+                <th>Department</th>
+                <th>Training Date</th>
+                <th>Title/Classroom</th>
+                <th>Document No.</th>
+                <th>Version No.</th>
+                <th>Result</th>
+                <th>Faculty</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users_data %}
+            <tr>
+                <td>{{ user.employee_name }}</td>
+                <td>{{ user.designation }}</td>
+                <td>{{ user.department_name }}</td>
+                <td>{{ user.training_date }}</td>
+                <td>{{ user.training_name }}</td>
+                <td>{{ user.document_number }}</td>
+                <td>{{ user.current_version }}</td>
+                <td>{{ user.status }}</td>
+                <td>{{ user.trainer_name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
