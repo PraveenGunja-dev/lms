@@ -5442,6 +5442,18 @@ class DocumentVersionListViewSet(viewsets.ModelViewSet):
         })
 
 
+class DocumentVersionCountViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        count = Document.objects.filter(document_current_status__in=[15, 12]).count()
+        return Response({
+            "status": True,
+            "message": "Document archived count fetched successfully",
+            "data": {"count": count}
+        })
+
+
 class DocxConvertPDFViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = DocumentviewSerializer
