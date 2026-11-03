@@ -113,18 +113,18 @@ WSGI_APPLICATION = 'configure.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": env("DB_ENGINE", "django.db.backends.postgresql"),
-        "NAME": env("DB_NAME", "lmsdms_db"),
-        "USER": env("DB_USER", "lmsdms_user"),
-        "PASSWORD": env("DB_PASSWORD", ""),
-        "HOST": env("DB_HOST", "localhost"),
-        "PORT": env("DB_PORT", "5432"),
+        "NAME": env("DB_NAME", env("POSTGRES_DB", "lmsdms_db")),
+        "USER": env("DB_USER", env("POSTGRES_USER", "lmsdms_user")),
+        "PASSWORD": env("DB_PASSWORD", env("POSTGRES_PASSWORD", "")),
+        "HOST": env("DB_HOST", env("POSTGRES_HOST", "localhost")),
+        "PORT": env("DB_PORT", env("POSTGRES_PORT", "5432")),
         # Each request runs in a transaction: a failure part-way through a
         # multi-step workflow action never leaves half-written data behind.
         "ATOMIC_REQUESTS": True,
     }
 }
 if DATABASES["default"]["ENGINE"].endswith("sqlite3"):
-    DATABASES["default"]["NAME"] = BASE_DIR / env("DB_NAME", "db.sqlite3")
+    DATABASES["default"]["NAME"] = BASE_DIR / env("DB_NAME", env("POSTGRES_DB", "db.sqlite3"))
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -160,13 +160,16 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "no-reply@localhost")
 
 # OnlyOffice document server integration
-ONLYOFFICE_SECRET = env("ONLYOFFICE_SECRET", "")
+ONLYOFFICE_SECRET = env("ONLYOFFICE_SECRET", env("ONLYOFFICE_JWT_SECRET", ""))
 ONLYOFFICE_SERVER_URL = env("ONLYOFFICE_SERVER_URL", "http://localhost")
 # Base URL at which the OnlyOffice server can reach this backend (media files + callback).
-BACKEND_PUBLIC_URL = env("BACKEND_PUBLIC_URL", "http://localhost:8000").rstrip("/")
+BACKEND_PUBLIC_URL = env("BACKEND_PUBLIC_URL", env("BACKEND_INTERNAL_URL", "http://localhost:8000")).rstrip("/")
 # Hosts the backend is allowed to download edited documents from (SSRF protection).
 # Empty list means "same host as ONLYOFFICE_SERVER_URL only".
-ONLYOFFICE_ALLOWED_DOWNLOAD_HOSTS = env_list("ONLYOFFICE_ALLOWED_DOWNLOAD_HOSTS", "")
+ONLYOFFICE_ALLOWED_DOWNLOAD_HOSTS = env_list(
+    "ONLYOFFICE_ALLOWED_DOWNLOAD_HOSTS",
+    "localhost,127.0.0.1,host.docker.internal"
+)
 
 # Account security
 LOGIN_MAX_FAILED_ATTEMPTS = int(env("LOGIN_MAX_FAILED_ATTEMPTS", "3"))
