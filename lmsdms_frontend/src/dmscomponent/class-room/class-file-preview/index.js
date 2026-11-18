@@ -3,13 +3,14 @@ import { useLocation } from "react-router-dom";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { useUpdateClassroomPreviewMutation } from "apilms/classRoomApi";
+import appConfig from "constants/config";
 // import { useUpdateClassroomPreviewMutation } from "path-to-your-api/classRoomApi"; // Adjust import path as needed
 // useUpdateClassroomPreviewMutation
 const ClassFileView = () => {
   const location = useLocation();
   const newRowData = location.state?.rowData || null;
   const classroomId = newRowData?.classroom_id;
-  const BASE_URL = process.env.REACT_APP_APIKEY;
+  const BASE_URL = appConfig.BACKEND_API_URL;
   
   const pdfUrl = newRowData?.files?.length > 0 
     ? `${newRowData.files[0].upload_doc}`  

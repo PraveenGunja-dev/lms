@@ -6,6 +6,7 @@ import { useAuth } from "hooks/use-auth";
 import { useCompleteViewDocumentMutation } from "apilms/trainingApi";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
+import appConfig from "constants/config";
 
 const TrainingDocumentView = () => {
   const { user } = useAuth();
@@ -30,7 +31,7 @@ const TrainingDocumentView = () => {
   }, [document_id,templateId]);
 
   const fetchEditorConfig = async () => {
-    const apiUrl = process.env.REACT_APP_APIKEY;
+    const apiUrl = appConfig.BACKEND_API_URL;
     try {
     //   const response = await fetch(`http://127.0.0.1:8000/dms_module/get_editor_config?document_id=${document_id}&template_id=${templateId}`);
     const response = await fetch(`${apiUrl}dms_module/get_editor_config?document_id=${document_id}&template_id=${templateId}&is_view=${true}`, {
@@ -50,7 +51,7 @@ const TrainingDocumentView = () => {
     if (editorConfig) {
       const script = document.createElement("script");
     //   script.src = "http://127.0.0.1/web-apps/apps/api/documents/api.js";
-      script.src = process.env.REACT_APP_ONLYOFFICE_SCRIPT;
+      script.src = appConfig.ONLYOFFICE_SCRIPT_URL;
       script.onload = () => {
         try {
           docEditorRef.current = new window.DocsAPI.DocEditor("onlyoffice-editor-container", {

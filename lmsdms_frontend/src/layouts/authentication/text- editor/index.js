@@ -33,6 +33,7 @@ import { AuthContext } from "context/auth-context";
 import { useDocTimeLineQuery } from "api/auth/timeLineApi";
 import { useFetchSendbackDataQuery } from "api/auth/documentApi";
 import { getErrorMessage } from "services/baseQuery";
+import appConfig from "constants/config";
 
 const DocumentView = () => {
   const { id } = useParams();
@@ -134,7 +135,7 @@ const DocumentView = () => {
             // `http://127.0.0.1:8000/dms_module/get_editor_config?template_id=${data?.select_template}`,
             // `http://127.0.0.1:8000/dms_module/get_editor_config?document_id=${id}&template_id=${templateIDMain}`,
             `${
-              process.env.REACT_APP_APIKEY
+              appConfig.BACKEND_API_URL
             }dms_module/get_editor_config?document_id=${id}&template_id=${templateIDMain}&is_view=${false}`,
             // http://127.0.0.1:8000/dms_module/get_editor_config?document_id=${id}&template_id=${templateIDMain}
             {
@@ -178,7 +179,7 @@ const DocumentView = () => {
   useEffect(() => {
     if (docEditorLoaded && editorConfig) {
       const script = document.createElement("script");
-      script.src = process.env.REACT_APP_ONLYOFFICE_SCRIPT;
+      script.src = appConfig.ONLYOFFICE_SCRIPT_URL;
       // script.src = "http://127.0.0.1/web-apps/apps/api/documents/api.js"; // ONLYOFFICE API script URL
       // script.src = "http://13.232.63.196:8080/web-apps/apps/api/documents/api.js"
       // console.log("Callback troubleshoot:::",editorConfig)

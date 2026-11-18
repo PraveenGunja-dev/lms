@@ -15,26 +15,40 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include, re_path
+from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
 from dms_module.views import onlyoffice_callback
 
 
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('user_profile/',include('user_profile.urls')),
-#     path('lms_module/',include('lms_module.urls')),
-#     path('dms_module/',include('dms_module.urls')),
-# ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+from django.http import JsonResponse
+
+
+def root_status(request):
+    return JsonResponse({
+        "status": True,
+        "message": "LMS and DMS Backend API is running.",
+        "app": "Please access the frontend application on port 3000."
+    })
+
 
 urlpatterns = [
+    path('', root_status, name='root_status'),
     path('api/admin/', admin.site.urls),
     path('api/user_profile/', include('user_profile.urls')),
     path('api/lms_module/', include('lms_module.urls')),
     path('api/dms_module/', include('dms_module.urls')),
+    # Same APIs without the /api/ prefix: older frontend builds and the OnlyOffice
+    # callback use these paths (e.g. REACT_APP_APIKEY=http://server:8080/).
+    path('user_profile/', include('user_profile.urls')),
+    path('lms_module/', include('lms_module.urls')),
     path('dms_module/', include('dms_module.urls')),
+]
 
-    
-    
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG or getattr(settings, "SERVE_MEDIA", True):
+    media_prefix = settings.MEDIA_URL.lstrip('/')
+    urlpatterns += [
+        re_path(rf'^{media_prefix}(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+        re_path(rf'^api/{media_prefix}(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    ]

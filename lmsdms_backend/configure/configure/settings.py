@@ -51,14 +51,39 @@ def env_list(key, default=""):
 
 DEBUG = env_bool("DJANGO_DEBUG", False)
 
-SECRET_KEY = env("DJANGO_SECRET_KEY", required=True)
 
-ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
+def _secret_key():
+    """DJANGO_SECRET_KEY from the environment. If it is not set (e.g. the server
+    was deployed without a .env file) a key is generated once and stored in
+    configure/.secret_key, so the app still starts and every worker/restart uses
+    the same key (a per-process random key would invalidate logins)."""
+    key = env("DJANGO_SECRET_KEY")
+    if key:
+        return key
+    key_file = BASE_DIR / ".secret_key"
+    if key_file.exists():
+        return key_file.read_text(encoding="utf-8").strip()
+    import secrets
+    key = secrets.token_urlsafe(64)
+    try:
+        key_file.write_text(key, encoding="utf-8")
+    except OSError:
+        raise ImproperlyConfigured(
+            "DJANGO_SECRET_KEY is not set and configure/.secret_key could not be created. "
+            "Set DJANGO_SECRET_KEY in the environment or in configure/.env."
+        )
+    return key
 
-# CORS: explicit allow-list in production; allow-all only when DEBUG is on and
-# no list is configured.
+
+SECRET_KEY = _secret_key()
+
+# Defaults match the original deployment (any host, any origin) so a server
+# without a .env keeps working. Set DJANGO_ALLOWED_HOSTS / CORS_ALLOWED_ORIGINS
+# to lock them down.
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "*")
+
 CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS", "")
-CORS_ALLOW_ALL_ORIGINS = DEBUG and not CORS_ALLOWED_ORIGINS
+CORS_ALLOW_ALL_ORIGINS = not CORS_ALLOWED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "")
 
@@ -145,8 +170,11 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "NUM_PROXIES": int(env("NUM_PROXIES")) if env("NUM_PROXIES") else None,
     "DEFAULT_THROTTLE_RATES": {
-        "auth": env("AUTH_THROTTLE_RATE", "10/min"),
+        # Per client IP. Behind nginx set NUM_PROXIES=1 so the real client IP
+        # (X-Forwarded-For) is used instead of the proxy's shared IP.
+        "auth": env("AUTH_THROTTLE_RATE", "60/min"),
     },
 }
 
@@ -220,6 +248,9 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Serve uploaded/generated files through Django (as the original DEBUG=True
+# deployment did). Set SERVE_MEDIA=False when nginx serves /media/ directly.
+SERVE_MEDIA = env_bool("SERVE_MEDIA", True)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -231,8 +262,9 @@ GOOGLE_API_CREDENTIALS_PATH = env("GOOGLE_API_CREDENTIALS_PATH", "")
 if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "SAMEORIGIN"
-    SESSION_COOKIE_SECURE = env_bool("SECURE_COOKIES", True)
-    CSRF_COOKIE_SECURE = env_bool("SECURE_COOKIES", True)
+    # Secure-only cookies break the admin login on plain-HTTP servers; enable on HTTPS.
+    SESSION_COOKIE_SECURE = env_bool("SECURE_COOKIES", False)
+    CSRF_COOKIE_SECURE = env_bool("SECURE_COOKIES", False)
     SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", False)
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     # Enable only once the whole site is served over HTTPS (e.g. 31536000).

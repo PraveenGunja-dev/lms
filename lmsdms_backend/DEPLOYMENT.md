@@ -50,6 +50,25 @@ Emails (credentials, OTPs) are printed in the backend console.
 Document editing needs an OnlyOffice document server, and PDF printing/cover pages
 need LibreOffice (or MS Word on Windows).
 
+## After deploying: if the URL or login does not work
+
+Run this on the server first; it prints every problem with its fix:
+
+```bash
+cd lmsdms_backend/configure && source venv/bin/activate
+python manage.py check_deployment
+```
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Backend will not start | Fixed: a missing `DJANGO_SECRET_KEY` used to stop it. It now generates `configure/.secret_key` once. | Set `DJANGO_SECRET_KEY` explicitly if you run more than one server. |
+| `400 Bad Request` / browser shows CORS errors | `DJANGO_ALLOWED_HOSTS` / `CORS_ALLOWED_ORIGINS` set too narrow | Leave them unset (defaults allow all, as before) or list the server IP/domain. |
+| Login always says wrong password / "Unable to connect" | Frontend built without `lmsdms_frontend/.env` (it is not in git), so it called the wrong API address | Default is now `<same host>:8000/api/`. If the API is elsewhere (e.g. nginx on 8080), create `lmsdms_frontend/.env.production` from `.env.example` and rebuild. |
+| Every login: "Something went wrong" | Database not migrated (new user columns missing) | `python manage.py makemigrations user_profile dms_module lms_module && python manage.py migrate` |
+| "Your account is locked" for users with the right password | Failed-login counters carried over from the old system | `python manage.py unlock_accounts --all` |
+| "Too many attempts" for many users at once | All users share nginx's IP for the login rate limit | Set `NUM_PROXIES=1` behind nginx (and/or raise `AUTH_THROTTLE_RATE`). |
+| Demo logins (`admin` / `Local@12345`) rejected | Those users exist only in a database seeded with `seed_local_data` | Use the real accounts of that database. |
+
 ## 2. Install
 
 ```bash

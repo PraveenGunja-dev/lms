@@ -6,6 +6,7 @@ import { useCompleteViewDocumentMutation } from "apilms/trainingApi";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import { useFetchParentDocumentsQuery } from "api/auth/documentApi";
+import appConfig from "constants/config";
 
 const ParentTrainingDocumentView = () => {
   const { user } = useAuth();
@@ -85,7 +86,7 @@ const ParentTrainingDocumentView = () => {
   }, [completedDocs, documents]);
 
   const fetchEditorConfig = async (docId, tempId) => {
-    const apiUrl = process.env.REACT_APP_APIKEY;
+    const apiUrl = appConfig.BACKEND_API_URL;
     setLoading(true);
     setEditorConfig(null);
     setTimerActive(false); // Pause timer while loading
@@ -108,7 +109,7 @@ const ParentTrainingDocumentView = () => {
   useEffect(() => {
     if (editorConfig) {
       const script = document.createElement("script");
-      script.src = process.env.REACT_APP_ONLYOFFICE_SCRIPT;
+      script.src = appConfig.ONLYOFFICE_SCRIPT_URL;
       script.onload = () => {
         try {
           // Clean up previous editor instance if exists

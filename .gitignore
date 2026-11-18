@@ -73,3 +73,6 @@ Thumbs.db
 
 
 *.zip
+
+# Auto-generated secret key (used only when DJANGO_SECRET_KEY is not set)
+lmsdms_backend/configure/.secret_key

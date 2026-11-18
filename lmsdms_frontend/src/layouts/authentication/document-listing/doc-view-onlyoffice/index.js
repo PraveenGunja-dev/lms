@@ -4,6 +4,7 @@ import { Box, Typography, CircularProgress, AppBar, Toolbar, Button } from "@mui
 import { useAuth } from "hooks/use-auth";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
+import appConfig from "constants/config";
 
 const DocumentPreviewComponent = () => {
   const { user } = useAuth();
@@ -26,7 +27,7 @@ const DocumentPreviewComponent = () => {
       try {
         const response = await fetch(
           // `http://127.0.0.1:8000/dms_module/get_editor_config?document_id=${docId}&template_id=${templateId}`,
-        `${process.env.REACT_APP_APIKEY}dms_module/get_editor_config?document_id=${docId}&template_id=${templateId}&is_view=${true}`,
+        `${appConfig.BACKEND_API_URL}dms_module/get_editor_config?document_id=${docId}&template_id=${templateId}&is_view=${true}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("token")}` },
@@ -67,7 +68,7 @@ const DocumentPreviewComponent = () => {
     if (docEditorLoaded && editorConfig) {
       const script = document.createElement("script");
       // script.src = "http://127.0.0.1/web-apps/apps/api/documents/api.js";
-      script.src = process.env.REACT_APP_ONLYOFFICE_SCRIPT;
+      script.src = appConfig.ONLYOFFICE_SCRIPT_URL;
       script.onload = () => {
         try {
           docEditorRef.current = new window.DocsAPI.DocEditor("onlyoffice-editor-container", {

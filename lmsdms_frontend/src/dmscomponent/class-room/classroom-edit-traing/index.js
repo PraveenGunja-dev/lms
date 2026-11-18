@@ -27,6 +27,7 @@ import { useFetchTrainingsQuery } from "apilms/trainingApi";
 import { useFetchTrainersQuery } from "api/auth/trainerApi";
 import { useUserListQuery } from "api/auth/userApi";
 import { useFailedUserQuery } from "api/auth/userApi";
+import appConfig from "constants/config";
 
 function ClassroomEditTraining() {
   const location = useLocation();
@@ -99,7 +100,7 @@ function ClassroomEditTraining() {
     formData.append("select_users", JSON.stringify(selectedUsers));
 
     const token = sessionStorage.getItem("token");
-    const apiUrl = `${process.env.REACT_APP_APIKEY}lms_module/update_classroom/${classroom.classroom_id}`;
+    const apiUrl = `${appConfig.BACKEND_API_URL}lms_module/update_classroom/${classroom.classroom_id}`;
 
     try {
       const response = await axios.put(apiUrl, formData, {

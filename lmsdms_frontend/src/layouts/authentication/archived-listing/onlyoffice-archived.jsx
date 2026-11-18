@@ -5,6 +5,7 @@ import { useAuth } from "hooks/use-auth";
 import { useCompleteViewDocumentMutation } from "apilms/trainingApi";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
+import appConfig from "constants/config";
 
 const TrainingDocumentObsoleteView = () => {
   const { user } = useAuth();
@@ -21,7 +22,7 @@ const TrainingDocumentObsoleteView = () => {
   const [completeViewDocument] = useCompleteViewDocumentMutation();
 
   const fetchEditorConfig = async () => {
-    const apiUrl = process.env.REACT_APP_APIKEY;
+    const apiUrl = appConfig.BACKEND_API_URL;
     try {
       console.log("Fetching editor config for URL:", front_file_url);
       const cleanFrontFileUrl = front_file_url.startsWith('/') ? front_file_url.substring(1) : front_file_url;
@@ -72,7 +73,7 @@ const TrainingDocumentObsoleteView = () => {
     if (docEditorLoaded && editorConfig) {
       console.log("Initializing ONLYOFFICE editor");
       const script = document.createElement("script");
-      script.src = process.env.REACT_APP_ONLYOFFICE_SCRIPT;
+      script.src = appConfig.ONLYOFFICE_SCRIPT_URL;
       
       script.onload = () => {
         try {
