@@ -2,7 +2,7 @@ import apiService from '../../services/apiService';
 
 export const login = async (loginData) => {
   try {
-    const response = await apiService.post('/user_profile/login', {
+    const response = await apiService.post('user_profile/login', {
       username: loginData.username,
       password: loginData.password,
       group_id: loginData.group_id,
@@ -20,7 +20,7 @@ export const login = async (loginData) => {
 };
 
 export const authenticateToken = (token) => {
-  return apiService.post('/get_user_from_token', {}, {
+  return apiService.post('get_user_from_token', {}, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -36,7 +36,7 @@ export const getUserGroups = () => {
   const token = sessionStorage.getItem('token');
   console.log("Token:", token); 
 
-  return apiService.get('/user_profile/user_group_list', {
+  return apiService.get('user_profile/user_group_list', {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -45,7 +45,7 @@ export const getUserGroups = () => {
 
 export const requestUserGroupList = () => {
   const token = sessionStorage.getItem('token');
-  return apiService.get('/user_profile/requestuser_group_list', {
+  return apiService.get('user_profile/requestuser_group_list', {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -54,7 +54,7 @@ export const requestUserGroupList = () => {
 
 export const groupList = async (credentials) => {
   try {
-    const response = await apiService.post('/user_profile/group_list', {
+    const response = await apiService.post('user_profile/group_list', {
       username: credentials.username,
       password: credentials.password,
     });

@@ -12,6 +12,11 @@ const apiService = axios.create({
 
 apiService.interceptors.request.use(
   (config) => {
+    // Strip leading slashes so axios appends relative to baseURL (e.g. /api/)
+    // instead of resolving against the origin root.
+    if (config.url && config.url.startsWith('/')) {
+      config.url = config.url.replace(/^\/+/, '');
+    }
     const token = sessionStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
